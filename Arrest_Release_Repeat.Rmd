@@ -1,0 +1,17 @@
+---
+title: "arrest, release, repeat"
+output: html_document
+date: "2023-04-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(readxl)
+```
+
+```{r}
+Arrest_Release_Repeat <- read_excel(here("Data/Arrest_Release_Repeat.xlsx"))
+```
+
