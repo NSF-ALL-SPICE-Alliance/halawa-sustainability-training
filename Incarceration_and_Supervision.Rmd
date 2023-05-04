@@ -6,17 +6,16 @@ date: "2023-05-03"
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-```
-
-## R Markdown
-
-```{r}
 library(readxl)
 library(here)
 library(tidyverse)
 library(urbnmapr)
 library(janitor)
 ```
+
+## R Markdown
+
+
 
 ```{r}
 Incarceration_and_Supervision <- read_excel(here("Data/Incarceration_and_Supervision.xlsx"))
@@ -37,12 +36,23 @@ colnames(Incarceration_and_Supervision)[colnames(Incarceration_and_Supervision) 
 ```
 
 ```{r}
-Incarceration_and_Supervision_map <- full_join(Incarceration_and_Supervision, states, by = "state_name")
+Incarceration_and_Supervision_map <- left_join(get_urbn_map(map = "states", sf = TRUE),
+Incarceration_and_Supervision, by = "state_name")
+
+
 ```
 ```{r}
 Incarceration_and_Supervision_map <- Incarceration_and_Supervision_map %>% 
-  filter(state_name != "50 States and D.C. total")
+  filter(state_name != "50 States and D.C. total",
+         state_name != "District of Columbia")
 ```
+
+```{r}
+Incarceration_and_Supervision_map_filtered <- Incarceration_and_Supervision_map %>% 
+  select(state_name, geometry, federal_prison_rate)
+```
+
+
 
 ```{r}
 ggplot()+
