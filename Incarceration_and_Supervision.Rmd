@@ -1,0 +1,53 @@
+---
+title: "incarceration and supervision"
+output: html_document
+date: "2023-05-03"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r}
+library(readxl)
+library(here)
+library(tidyverse)
+library(urbnmapr)
+library(janitor)
+```
+
+```{r}
+Incarceration_and_Supervision <- read_excel(here("Data/Incarceration_and_Supervision.xlsx"))
+```
+
+```{r}
+states <- get_urbn_map(map = "states", sf = TRUE)
+```
+
+```{r}
+Incarceration_and_Supervision <- Incarceration_and_Supervision %>% 
+  clean_names()
+```
+
+```{r}
+colnames(Incarceration_and_Supervision)[colnames(Incarceration_and_Supervision) == "state"] ="state_name"
+
+```
+
+```{r}
+Incarceration_and_Supervision_map <- full_join(Incarceration_and_Supervision, states, by = "state_name")
+```
+```{r}
+Incarceration_and_Supervision_map <- Incarceration_and_Supervision_map %>% 
+  filter(state_name != "50 States and D.C. total")
+```
+
+```{r}
+ggplot()+
+  geom_sf(Incarceration_and_Supervision_map,
+          mapping = aes(fill = federal_prison_rate), 
+          color = "#ffffff")
+```
+
